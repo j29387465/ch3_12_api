@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 
+
 from django.contrib import messages  
 
 
@@ -163,4 +164,82 @@ def getItem(request, id):
     except:
         return JsonResponse({"Error":"Item not found"}, status = 404)
 
+from django.views.decorators.csrf import csrf_exempt
+#停止csrf 驗證 使外部程式也可以呼叫
+
+@csrf_exempt
+def createItem(request):
+    try:
+        if request.method == "POST":
+            cname = request.POST['cname']
+            csex = request.POST['csex']
+            cbirthday = request.POST['cbirthday']
+            cemail = request.POST['cemail']
+            cphone = request.POST['cphone']
+            caddr = request.POST['caddr']
+            print(f"{cname} {csex} {cbirthday} {cemail} {cphone} {caddr}")
+            # return HttpResponse("POST")
+        elif request.method == "GET":
+            cname = request.GET['cname']
+            csex = request.GET['csex']
+            cbirthday = request.GET['cbirthday']
+            cemail = request.GET['cemail']
+            cphone = request.GET['cphone']
+            caddr = request.GET['caddr']
+            print(f"{cname} {csex} {cbirthday} {cemail} {cphone} {caddr}")
+            # return HttpResponse("GET")
+        
+        try:
+            add = students(
+            cname = cname,
+            csex = csex,
+            cbirthday = cbirthday,
+            cemail = cemail,
+            cphone = cphone,
+            caddr = caddr
+            )
+            add.save()
+            return JsonResponse({"MessageL": "Item creared successfully"}, status = 201)
+        except:
+            return JsonResponse({"Erroe": "Failed to create data"}, status = 500)
+    except:
+        return JsonResponse({"Erroe": "Invalid data"}, status = 404)
     
+@csrf_exempt
+def updateItem(request, id):
+    print(f"ID : {id}")
+    try:
+        if request.method == "POST":
+            cname = request.POST['cname']
+            csex = request.POST['csex']
+            cbirthday = request.POST['cbirthday']
+            cemail = request.POST['cemail']
+            cphone = request.POST['cphone']
+            caddr = request.POST['caddr']
+            print(f"{cname} {csex} {cbirthday} {cemail} {cphone} {caddr}")
+            # return HttpResponse("POST")
+        elif request.method == "GET":
+            cname = request.GET['cname']
+            csex = request.GET['csex']
+            cbirthday = request.GET['cbirthday']
+            cemail = request.GET['cemail']
+            cphone = request.GET['cphone']
+            caddr = request.GET['caddr']
+            print(f"{cname} {csex} {cbirthday} {cemail} {cphone} {caddr}")
+            # return HttpResponse("GET")
+        try:
+            update = students.objects.get(cid = id)
+            update.cname = cname
+            update.csex = csex
+            update.cbirthday = cbirthday
+            update.cemail = cemail
+            update.cphone = cphone
+            update.caddr = caddr
+            update.save()
+            return JsonResponse({"MessageL": "Item update successfully"}, status = 201)
+        except:
+            return JsonResponse({"Erroe": "Failed to update data"}, status = 500)
+
+        return HttpResponse
+    except:
+        return JsonResponse({"Erroe": "Invalid data"}, status = 404)
