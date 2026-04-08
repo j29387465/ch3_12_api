@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>學生資料管理系統 - 新增資料</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary-color: #3498db;
+        --secondary-color: #2c3e50;
+        --bg-color: #f4f7f6;
+        --success-color: #2ecc71;
+        --reset-color: #95a5a6;
+    }
+
+    body {
+        font-family: 'Noto Sans TC', sans-serif;
+        background-color: var(--bg-color);
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 50px auto;
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        color: var(--secondary-color);
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .back-link {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        color: var(--primary-color);
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    /* 表單佈局優化 */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .required-mark {
+        color: #e74c3c;
+        margin-right: 3px;
+    }
+
+    /* 輸入框美化 */
+    input[type="text"],
+    input[type="email"],
+    input[type="date"] {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box; /* 確保寬度包含 padding */
+        font-size: 1rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
+        outline: none;
+    }
+
+    /* 單選按鈕美化 */
+    .radio-group {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        padding: 10px 0;
+    }
+
+    .radio-group input {
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+    /* 按鈕美化 */
+    .button-group {
+        text-align: center;
+        margin-top: 30px;
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .btn {
+        padding: 12px 35px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s, background 0.3s;
+    }
+
+    .btn-submit {
+        background-color: var(--success-color);
+        color: white;
+    }
+
+    .btn-submit:hover {
+        background-color: #27ae60;
+        transform: translateY(-2px);
+    }
+
+    .btn-reset {
+        background-color: var(--reset-color);
+        color: white;
+    }
+
+    .btn-reset:hover {
+        background-color: #7f8c8d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="title">新增學生資料</h1>
+    <a href="{% url 'index' %}" class="back-link">← 回首頁</a>
+
+    <form action="{% url 'post' %}" method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="cname"><span class="required-mark">*</span>姓名</label>
+            <input type="text" id="cname" name="cname" required placeholder="例如：王小明">
+        </div>
+
+        <div class="form-group">
+            <label><span class="required-mark">*</span>性別</label>
+            <div class="radio-group">
+                <span>
+                    <input type="radio" id="csex_m" name="csex" value="M" checked>
+                    <label for="csex_m" style="display:inline; font-weight:normal;">男</label>
+                </span>
+                <span>
+                    <input type="radio" id="csex_f" name="csex" value="F">
+                    <label for="csex_f" style="display:inline; font-weight:normal;">女</label>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="cbirthday"><span class="required-mark">*</span>生日</label>
+            <input type="date" id="cbirthday" name="cbirthday" required>
+        </div>
+
+        <div class="form-group">
+            <label for="cemail"><span class="required-mark">*</span>信箱</label>
+            <input type="email" id="cemail" name="cemail" required placeholder="example@mail.com">
+        </div>
+
+        <div class="form-group">
+            <label for="cphone">電話</label>
+            <input type="text" id="cphone" name="cphone" placeholder="0912-345-678">
+        </div>
+
+        <div class="form-group">
+            <label for="caddr">地址</label>
+            <input type="text" id="caddr" name="caddr" placeholder="請輸入通訊地址">
+        </div>
+
+        <div class="button-group">
+            <input type="submit" class="btn btn-submit" value="儲存資料">
+            <input type="reset" class="btn btn-reset" value="清除重填">
+        </div>
+    </form>
+</div>
+{% endblock %}

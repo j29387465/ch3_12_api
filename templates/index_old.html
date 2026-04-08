@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}
+<title>學生資料管理系統</title>
+<style>
+    h1, h2{
+        text-align: center;
+    }
+    table, th, td{
+        border: 1px solid lightblue;
+        border-collapse: collapse;
+    }
+    table{
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .head_content{
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+</style>
+
+{% endblock  %}
+{% block content %}
+<div class="head_content">
+    <h1 class="title">學生資料管理系統</h1>
+    <h2>目前資料筆數 : {{ data_count }} ， <a href="{% url 'post' %}">新增學生資料</a></h2>
+    {% comment %} <h2>目前資料筆數 : {{ data_count }} ， <a href="{% url 'post' %}">新增學生資料</a></h2> {% endcomment %}
+    <div style="text-align: center;">
+        <!-- <form action="/index/" method="get"> -->
+        <form action="{% url 'index' %}" method="get">
+            <label for="site_search">搜尋關鍵字</label>
+            <input type="search" id="site_search" name="site_search">
+            <button type="submit">搜尋</button>
+        </form>
+    </div>
+</div>
+<div>
+    {% if status %}
+        <table>
+            <tr>
+                <th>學號</th>
+                <th>姓名</th>
+                <th>性別</th>
+                <th>生日</th>
+                <th>信箱</th>
+                <th>電話</th>
+                <th>地址</th>
+                <th>編輯</th>
+            </tr>
+            {% for data in page_obj %}
+            <tr>
+                <td>{{ data.cid }}</td>
+                <td>{{ data.cname }}</td>
+                <td>{% if data.csex == "M" %}男{% else %}女{% endif %}</td>
+                <td>{{ data.cbirthday | date:'Y-m-d'}}</td> {% comment %} 冒號後 不可空白 {% endcomment %}
+                <td>{{ data.cemail }}</td>
+                <td>{{ data.cphone }}</td>
+                <td>{{ data.caddr }}</td>
+                <td>
+                    <a href="/edit/{{ data.cid }}/">編輯</a>
+                    <a href="/delete/{{ data.cid }}/">刪除</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        {% comment %} 分頁導覽 {% endcomment %}
+        <div style="text-align: center;margin-top: 20px;">
+            {% comment %} 最前頁 {% endcomment %}
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo;</a>
+            {% else %}
+                <span>&laquo;</span>
+            {% endif %}
+
+            {% comment %} 上一頁 {% endcomment %}
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">&lsaquo;</a>
+            {% else %}
+                <span>&lsaquo;</span>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <strong>{{ num }}</strong>
+                {% else %}
+                    <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% comment %} 下一頁 {% endcomment %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">&rsaquo;</a>
+            {% else %}
+                <span>&rsaquo;</span>
+            {% endif %}
+
+            {% comment %} 最後頁 {% endcomment %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+            {% else %}
+                <span>&raquo;</span>
+            {% endif %}
+
+        </div>
+
+    {% else %}
+        <h1>{{ errorMsg }}</h1>
+    {% endif %}
+
+</div>
+{% if messages %}
+    <script>
+        {% for message in messages %}
+            alert("{{ message }}");
+        {% endfor %}
+    </script>
+{% endif %}
+
+{% endblock  %}

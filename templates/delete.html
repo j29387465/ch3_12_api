@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>學生資料管理系統 - 刪除確認</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --danger-color: #e74c3c;
+        --secondary-color: #2c3e50;
+        --bg-color: #f4f7f6;
+        --border-color: #eee;
+    }
+
+    body {
+        font-family: 'Noto Sans TC', sans-serif;
+        background-color: var(--bg-color);
+        margin: 0;
+    }
+
+    .container {
+        max-width: 550px;
+        margin: 60px auto;
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border-top: 5px solid var(--danger-color); /* 頂部紅色警示條 */
+    }
+
+    h1 {
+        color: var(--danger-color);
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .warning-text {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        font-weight: bold;
+    }
+
+    .back-link {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        color: #3498db;
+        margin-bottom: 25px;
+    }
+
+    /* 資訊列表樣式（取代表格） */
+    .info-card {
+        background-color: #fcfcfc;
+        border-radius: 10px;
+        padding: 20px;
+        border: 1px solid var(--border-color);
+        margin-bottom: 30px;
+    }
+
+    .info-item {
+        display: flex;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        flex: 0 0 100px;
+        font-weight: bold;
+        color: #666;
+    }
+
+    .info-value {
+        flex: 1;
+        color: var(--secondary-color);
+    }
+
+    /* 按鈕樣式 */
+    .btn-delete {
+        width: 100%;
+        padding: 15px;
+        background-color: var(--danger-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    .btn-delete:hover {
+        background-color: #c0392b;
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="title">刪除資料確認</h1>
+    <p class="warning-text">⚠️ 注意：刪除後將無法還原此學生的所有紀錄</p>
+    
+    <a href="{% url 'index' %}" class="back-link">← 取消並返回列表</a>
+
+    <div class="info-card">
+        <div class="info-item">
+            <div class="info-label">姓名</div>
+            <div class="info-value"><strong>{{ st.cname }}</strong></div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">性別</div>
+            <div class="info-value">
+                {% if st.csex == "M" %}男{% elif st.csex == "F" %}女{% else %}未設定{% endif %}
+            </div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">生日</div>
+            <div class="info-value">{{ st.cbirthday|date:'Y-m-d' }}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">信箱</div>
+            <div class="info-value">{{ st.cemail }}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">電話</div>
+            <div class="info-value">{{ st.cphone|default:"(未提供)" }}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">地址</div>
+            <div class="info-value">{{ st.caddr|default:"(未提供)" }}</div>
+        </div>
+    </div>
+
+    <form action="{% url 'delete' st.cid %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-delete" onclick="return confirm('確定要永久刪除學生 {{ st.cname }} 的資料嗎？');">
+            確認並永久刪除
+        </button>
+    </form>
+</div>
+{% endblock %}
