@@ -26,6 +26,11 @@ urlpatterns = [
     path('post/', views.post, name='post'),
     path('edit/<int:id>/', views.edit, name='edit'),
     path('delete/<int:id>/', views.delete, name='delete'),
+
+    #web api
+    path('getAllItems/', views.getAllItems, name='getAllItems'),
+    path('getItem/<int:id>/', views.getItem, name='getItem'),
+
 ]
 
 #name 幫網址取一個 代號, Django 不需靠網址 字串連接

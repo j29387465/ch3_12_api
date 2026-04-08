@@ -5,6 +5,7 @@ from django.forms.models import model_to_dict
 from django.shortcuts import redirect
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 
 from django.contrib import messages  
 
@@ -136,3 +137,30 @@ def delete(request, id):
         # print(model_to_dict(st))
         return render(request, 'delete.html', {"st" : st})
     return HttpResponse("Hello")
+
+def getAllItems(request):
+    resultObj = students.objects.all().order_by('cid')
+    # print(type(resultObj))
+    # for item in resultList:
+    #     # print(model_to_dict(item))
+    #     print(type(item))
+    resultList = list(resultObj.values()) # 把querySet 集合裡的 object  轉換成 list 元素為 dict 的型態
+    # print(type(resultList))
+    # for item in resultList:
+    #     print(type(item))
+
+    return JsonResponse(resultList, safe=False)
+    #safe = True => 只允許傳入 dict
+    #safe = False => 只允許傳入 非 dict
+
+def getItem(request, id):
+    try:
+        obj = students.objects.get(cid = id)
+        # print(obj)
+        # print(model_to_dict(obj))
+        resultDict = model_to_dict(obj)
+        return JsonResponse(resultDict, safe=False)
+    except:
+        return JsonResponse({"Error":"Item not found"}, status = 404)
+
+    
